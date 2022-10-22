@@ -79,7 +79,8 @@ import static com.google.gson.Gson.DEFAULT_USE_JDK_UNSAFE;
  * @author Joel Leitch
  * @author Jesse Wilson
  */
-public final class GsonBuilder {
+public final class
+GsonBuilder {
   private Excluder excluder = Excluder.DEFAULT;
   private LongSerializationPolicy longSerializationPolicy = LongSerializationPolicy.DEFAULT;
   private FieldNamingStrategy fieldNamingPolicy = FieldNamingPolicy.IDENTITY;
@@ -145,6 +146,7 @@ public final class GsonBuilder {
    * @param ignoreVersionsAfter any field or type marked with a version higher than this value
    * are ignored during serialization or deserialization.
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
+   *  设置版本号
    */
   public GsonBuilder setVersion(double ignoreVersionsAfter) {
     excluder = excluder.withVersion(ignoreVersionsAfter);
@@ -162,6 +164,7 @@ public final class GsonBuilder {
    * {@link java.lang.reflect.Modifier#STATIC}.
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    */
+  //设置忽略某种修饰词修饰的变量，此处忽略 protected 修饰的变量
   public GsonBuilder excludeFieldsWithModifiers(int... modifiers) {
     excluder = excluder.withModifiers(modifiers);
     return this;
@@ -175,6 +178,7 @@ public final class GsonBuilder {
    *
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @since 1.3
+   * 设置 generateNonExecutableJson = true
    */
   public GsonBuilder generateNonExecutableJson() {
     this.generateNonExecutableJson = true;
@@ -186,6 +190,7 @@ public final class GsonBuilder {
    * that do not have the {@link com.google.gson.annotations.Expose} annotation.
    *
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
+   * 设置使用 Expose 注解，用于忽略某个字段，默认情况下是不使用 Expose 注解的
    */
   public GsonBuilder excludeFieldsWithoutExposeAnnotation() {
     excluder = excluder.excludeFieldsWithoutExposeAnnotation();
@@ -198,6 +203,7 @@ public final class GsonBuilder {
    *
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @since 1.2
+   * 设置 serializeNulls = true
    */
   public GsonBuilder serializeNulls() {
     this.serializeNulls = true;
@@ -280,6 +286,7 @@ public final class GsonBuilder {
    *
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @since 1.7
+   * 设置 complexMapKeySerialization = true
    */
   public GsonBuilder enableComplexMapKeySerialization() {
     complexMapKeySerialization = true;
@@ -291,6 +298,7 @@ public final class GsonBuilder {
    *
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @since 1.3
+   *设置不序列化内部类
    */
   public GsonBuilder disableInnerClassSerialization() {
     excluder = excluder.disableInnerClassSerialization();
@@ -304,6 +312,8 @@ public final class GsonBuilder {
    * @param serializationPolicy the particular policy to use for serializing longs.
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @since 1.3
+   * 设置 longSerializationPolicy = LongSerializationPolicy.STRING
+   * 即 long 类型的数据在序列化的时候会转成 String
    */
   public GsonBuilder setLongSerializationPolicy(LongSerializationPolicy serializationPolicy) {
     this.longSerializationPolicy = serializationPolicy;
@@ -317,6 +327,7 @@ public final class GsonBuilder {
    * @param namingConvention the JSON field naming convention to use for serialization and
    * deserialization.
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
+   * 以下两个方法本质上是一样的，均为设置 fieldNamingPolicy 属性
    */
   public GsonBuilder setFieldNamingPolicy(FieldNamingPolicy namingConvention) {
     this.fieldNamingPolicy = namingConvention;
@@ -330,6 +341,7 @@ public final class GsonBuilder {
    * @param fieldNamingStrategy the actual naming strategy to apply to the fields
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @since 1.3
+   * 以下两个方法本质上是一样的，均为设置 fieldNamingPolicy 属性
    */
   public GsonBuilder setFieldNamingStrategy(FieldNamingStrategy fieldNamingStrategy) {
     this.fieldNamingPolicy = fieldNamingStrategy;
@@ -369,6 +381,7 @@ public final class GsonBuilder {
    * @param strategies the set of strategy object to apply during object (de)serialization.
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @since 1.4
+   * 批量添加序列化时使用的排除策略，此方法为不定参方法
    */
   public GsonBuilder setExclusionStrategies(ExclusionStrategy... strategies) {
     for (ExclusionStrategy strategy : strategies) {
@@ -388,6 +401,7 @@ public final class GsonBuilder {
    * @param strategy an exclusion strategy to apply during serialization.
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @since 1.7
+   * 添加一个序列化时使用的排除策略
    */
   public GsonBuilder addSerializationExclusionStrategy(ExclusionStrategy strategy) {
     excluder = excluder.withExclusionStrategy(strategy, true, false);
@@ -405,6 +419,7 @@ public final class GsonBuilder {
    * @param strategy an exclusion strategy to apply during deserialization.
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @since 1.7
+   * 添加一个反序列化时使用的排除策略
    */
   public GsonBuilder addDeserializationExclusionStrategy(ExclusionStrategy strategy) {
     excluder = excluder.withExclusionStrategy(strategy, false, true);
@@ -416,6 +431,7 @@ public final class GsonBuilder {
    * affects Json serialization.
    *
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
+   * 设置 prettyPrinting = true
    */
   public GsonBuilder setPrettyPrinting() {
     prettyPrinting = true;
@@ -429,6 +445,7 @@ public final class GsonBuilder {
    *
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @see JsonReader#setLenient(boolean)
+   * 设置 lenient = true
    */
   public GsonBuilder setLenient() {
     lenient = true;
@@ -441,6 +458,7 @@ public final class GsonBuilder {
    *
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @since 1.3
+   * 设置 escapeHtmlChars = false
    */
   public GsonBuilder disableHtmlEscaping() {
     this.escapeHtmlChars = false;
@@ -482,6 +500,7 @@ public final class GsonBuilder {
    * to/from
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @since 1.2
+   * 设置 dateStyle、datePattern、timeStyle
    */
   public GsonBuilder setDateFormat(int style) {
     this.dateStyle = style;
@@ -526,6 +545,7 @@ public final class GsonBuilder {
    * @param typeAdapter This object must implement at least one of the {@link TypeAdapter},
    * {@link InstanceCreator}, {@link JsonSerializer}, and a {@link JsonDeserializer} interfaces.
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
+   * 本质上以下三个方法均为设置 TypeAdapter
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
   public GsonBuilder registerTypeAdapter(Type type, Object typeAdapter) {
@@ -551,7 +571,7 @@ public final class GsonBuilder {
    * adapter needs to be configured based on the type of the field being processed. Gson
    * is designed to handle a large number of factories, so you should consider registering
    * them to be at par with registering an individual type adapter.
-   *
+   *本质上以下三个方法均为设置 TypeAdapter
    * @since 2.1
    */
   public GsonBuilder registerTypeAdapterFactory(TypeAdapterFactory factory) {
@@ -572,6 +592,7 @@ public final class GsonBuilder {
    *        {@link JsonSerializer} or {@link JsonDeserializer} interfaces.
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @since 1.7
+   * 本质上以下三个方法均为设置 TypeAdapter
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
   public GsonBuilder registerTypeHierarchyAdapter(Class<?> baseType, Object typeAdapter) {
@@ -606,6 +627,7 @@ public final class GsonBuilder {
    *
    * @return a reference to this {@code GsonBuilder} object to fulfill the "Builder" pattern
    * @since 1.3
+   * 设置 serializeSpecialFloatingPointValues = true
    */
   public GsonBuilder serializeSpecialFloatingPointValues() {
     this.serializeSpecialFloatingPointValues = true;

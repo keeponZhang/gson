@@ -101,7 +101,7 @@ public class TypeToken<T> {
     return type;
   }
 
-  /**
+  /**[
    * Check if this type is assignable from the given class object.
    *
    * @deprecated this implementation may be inconsistent with javac for types

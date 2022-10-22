@@ -123,6 +123,7 @@ public abstract class TypeAdapter<T> {
    * for {@code value}.
    *
    * @param value the Java object to write. May be null.
+   * 写入方法，主要的指挥 JsonWriter 进行业务处理
    */
   public abstract void write(JsonWriter out, T value) throws IOException;
 
@@ -243,6 +244,7 @@ public abstract class TypeAdapter<T> {
    * and converts it to a Java object. Returns the converted object.
    *
    * @return the converted Java object. May be null.
+   * 读取方法，主要是指挥 JsonReader 进行业务操作
    */
   public abstract T read(JsonReader in) throws IOException;
 

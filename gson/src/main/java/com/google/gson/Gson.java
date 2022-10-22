@@ -212,14 +212,22 @@ public final class Gson {
       List<TypeAdapterFactory> builderHierarchyFactories,
       List<TypeAdapterFactory> factoriesToBeAdded,
       ToNumberStrategy objectToNumberStrategy, ToNumberStrategy numberToNumberStrategy) {
+    //排除器，在序列化对象的时候会根据使用者设置的规则排除一些数据,
+    //排除策略需要使用者自行实现 ExclusionStrategy 接口来制定
     this.excluder = excluder;
+    //fieldNamingStrategy 负责命名规则的确定(比如 大驼峰命名、小驼峰命名、下划线命名 等)
+    //选择不同的 fieldNamingStrategy 会在输出 json 字符串的时候把字段名称转成不同的命名形式
     this.fieldNamingStrategy = fieldNamingStrategy;
     this.instanceCreators = instanceCreators;
     this.constructorConstructor = new ConstructorConstructor(instanceCreators, useJdkUnsafe);
+    ///serializeNulls 是一个 boolean 类型的对象，用以表示是否支持空对象的序列化
     this.serializeNulls = serializeNulls;
     this.complexMapKeySerialization = complexMapKeySerialization;
+    //是否要生成不可执行的 json
     this.generateNonExecutableJson = generateNonExecutableGson;
+    //是否对 html 进行编码，即对部分符号进行转义(=、<、> 等)
     this.htmlSafe = htmlSafe;
+    //在输出的时候格式化 json
     this.prettyPrinting = prettyPrinting;
     this.lenient = lenient;
     this.serializeSpecialFloatingPointValues = serializeSpecialFloatingPointValues;
@@ -232,20 +240,26 @@ public final class Gson {
     this.builderHierarchyFactories = builderHierarchyFactories;
     this.objectToNumberStrategy = objectToNumberStrategy;
     this.numberToNumberStrategy = numberToNumberStrategy;
-
+    //TypeAdapter 是一个接口，用于序列化和反序列化某种特定的类型
+    //TypeAdapterFactory 是 TypeAdapter 的包装类
     List<TypeAdapterFactory> factories = new ArrayList<TypeAdapterFactory>();
 
     // built-in type adapters that cannot be overridden
+    //处理 JsonElement 类型对象的 TypeAdapterFactory
     factories.add(TypeAdapters.JSON_ELEMENT_FACTORY);
+    //处理 Object 类型对象的 TypeAdapterFactory
     factories.add(ObjectTypeAdapter.getFactory(objectToNumberStrategy));
 
     // the excluder must precede all adapters that handle user-defined types
+    //excluder 是一个省略了类型的 TypeAdapterFactory,根据官方注释，excluder 需要先于所有使用者自定义的 TypeAdapterFactory 去执行
     factories.add(excluder);
 
     // users' type adapters
+    // 处理使用者自定义的 TypeAdapterFactory
     factories.addAll(factoriesToBeAdded);
 
     // type adapters for basic platform types
+    //处理基本类型的TypeAdapterFactory
     factories.add(TypeAdapters.STRING_FACTORY);
     factories.add(TypeAdapters.INTEGER_FACTORY);
     factories.add(TypeAdapters.BOOLEAN_FACTORY);
@@ -295,6 +309,7 @@ public final class Gson {
     this.jsonAdapterFactory = new JsonAdapterAnnotationTypeAdapterFactory(constructorConstructor);
     factories.add(jsonAdapterFactory);
     factories.add(TypeAdapters.ENUM_FACTORY);
+    //反射分解对象的 TypeAdapterFactory，此处放到最后，因为ReflectiveTypeAdapterFactory能适配以上所有
     factories.add(new ReflectiveTypeAdapterFactory(
         constructorConstructor, fieldNamingStrategy, excluder, jsonAdapterFactory));
 
